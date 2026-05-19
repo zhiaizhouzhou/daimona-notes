@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NixOS 安装踩坑记录 · Daimona 个人笔记</title>
+    <meta name="description" content="第一次认真装 NixOS，记录分区、硬件配置生成和 rebuild 的几个坑。">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+        :root { --accent: #14b8a6; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); }
+        .section-card, .note-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .section-card:hover, .note-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.18), 0 8px 10px -6px rgb(0 0 0 / 0.18); }
+        .accent-text { color: #14b8a6; }
+        .note-content p { margin: 1rem 0; color: rgb(203 213 225); line-height: 1.9; }
+        .note-content code { color: #5eead4; background: rgba(15, 23, 42, .85); border: 1px solid rgba(51, 65, 85, .9); padding: .1rem .35rem; border-radius: .45rem; }
+        .soft-grid { background-image: radial-gradient(circle at 1px 1px, rgba(20,184,166,.12) 1px, transparent 0); background-size: 28px 28px; }
+        .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-200 soft-grid">
+
+    <nav class="border-b border-slate-700/50 bg-[#0f172a]/80 backdrop-blur-xl fixed w-full z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-[#14b8a6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#14b8a6]/30">
+                    <i class="fa-solid fa-book text-white text-xl"></i>
+                </div>
+                <span class="font-semibold text-2xl tracking-tight">Daimona</span>
+            </a>
+            <div class="hidden md:flex items-center gap-x-8 text-sm">
+                <a href="/" class="hover:text-[#14b8a6] transition-colors">首页</a>
+                <a href="/#notes" class="hover:text-[#14b8a6] transition-colors">全部笔记</a>
+                <a href="/#archive" class="hover:text-[#14b8a6] transition-colors">归档</a>
+                <a href="/#about" class="hover:text-[#14b8a6] transition-colors">关于</a>
+            </div>
+            <div class="flex items-center gap-x-3">
+                <button onclick="alert('联系邮箱：miniqweqwe@qq.com')"
+                        class="px-4 py-2 text-sm flex items-center gap-x-2 hover:bg-slate-800 rounded-2xl transition-all border border-slate-700">
+                    <i class="fa-solid fa-envelope"></i><span class="hidden sm:inline">联系我</span>
+                </button>
+                <button onclick="window.location.href='https://github.com/daimon3332'"
+                        class="px-4 py-2 text-sm flex items-center gap-x-2 hover:bg-slate-800 rounded-2xl transition-all border border-slate-700">
+                    <i class="fa-brands fa-github"></i><span class="hidden sm:inline">GitHub</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="pt-16"></div>
+    <main class="max-w-3xl mx-auto px-6 pt-14 pb-6">
+        <article class="bg-slate-800/80 border border-slate-700/80 rounded-[2rem] p-7 md:p-10 shadow-2xl shadow-slate-950/30">
+            <a href="/#notes" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-[#14b8a6] transition-colors mb-8">
+                <i class="fa-solid fa-arrow-left"></i><span>返回全部笔记</span>
+            </a>
+            <div class="flex flex-wrap items-center gap-3 mb-5">
+                <span class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl">2026-01-04</span>
+                <span class="px-3 py-1 text-xs font-medium bg-slate-900/70 text-slate-400 rounded-2xl">NixOS</span>
+                <span class="text-xs text-slate-500">阅读 10 分钟</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-5">NixOS 安装踩坑记录</h1>
+            <p class="text-lg text-slate-400 leading-relaxed mb-8">第一次认真装 NixOS，记录分区、硬件配置生成和 rebuild 的几个坑。</p>
+            <div class="note-content border-t border-slate-700/70 pt-6">
+                <p>假期试了一次 NixOS。最有意思的是系统配置基本都写在 `/etc/nixos/configuration.nix` 里，改完之后 `sudo nixos-rebuild switch` 才会真正应用。</p>
+                <p>分区这一步还是要小心，UEFI 一般需要 EFI 分区挂到 `/boot` 或 `/boot/efi`。我一开始挂载顺序错了，生成出来的 hardware config 看着就不对。</p>
+                <p>NixOS 的好处是可复现，坏处是刚开始很陌生。包名、服务配置、home-manager 都要慢慢查。今天先装成功，后面再折腾桌面环境。</p>
+            </div>
+        </article>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 mt-12">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <a href="https://beian.miit.gov.cn/" target="_blank" style="color: #fff; text-decoration: none;">
+                冀ICP备20260167号
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
+
+

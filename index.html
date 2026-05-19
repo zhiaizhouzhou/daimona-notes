@@ -2,23 +2,411 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Daimona 个人笔记</title>
-    <meta name="description" content="个人日记分享、个人文章撰写与学习心得记录">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daimona · 个人笔记</title>
+    <meta name="description" content="Daimona 的个人笔记，记录编程学习、Linux、Docker、Java、NixOS、考试经验和日常想法。">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+        :root { --accent: #14b8a6; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); }
+        .section-card, .note-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .section-card:hover, .note-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.18), 0 8px 10px -6px rgb(0 0 0 / 0.18); }
+        .accent-text { color: #14b8a6; }
+        .note-content p { margin: 1rem 0; color: rgb(203 213 225); line-height: 1.9; }
+        .note-content code { color: #5eead4; background: rgba(15, 23, 42, .85); border: 1px solid rgba(51, 65, 85, .9); padding: .1rem .35rem; border-radius: .45rem; }
+        .soft-grid { background-image: radial-gradient(circle at 1px 1px, rgba(20,184,166,.12) 1px, transparent 0); background-size: 28px 28px; }
+        .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+    </style>
 </head>
-<body style="font-family: system-ui; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6;">
-    <h1>Daimona 个人笔记</h1>
-    <p>这里是我的个人笔记与文章分享站点，记录日常想法、学习心得与生活感悟。</p>
-    <p>内容仅供个人记录与分享，不涉及任何商业用途。</p>
-    
-    <hr style="margin: 40px 0;">
-    
-    <footer style="color: #666; font-size: 14px;">
-        <p>© 2026 Daimona</p>
-        <p>
-           <a href="https://beian.miit.gov.cn/" target="_blank" style="color: #666; text-decoration: none;">
+<body class="bg-[#0f172a] text-slate-200 soft-grid">
+
+    <nav class="border-b border-slate-700/50 bg-[#0f172a]/80 backdrop-blur-xl fixed w-full z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-[#14b8a6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#14b8a6]/30">
+                    <i class="fa-solid fa-book text-white text-xl"></i>
+                </div>
+                <span class="font-semibold text-2xl tracking-tight">Daimona</span>
+            </a>
+            <div class="hidden md:flex items-center gap-x-8 text-sm">
+                <a href="/" class="hover:text-[#14b8a6] transition-colors">首页</a>
+                <a href="/#notes" class="hover:text-[#14b8a6] transition-colors">全部笔记</a>
+                <a href="/#archive" class="hover:text-[#14b8a6] transition-colors">归档</a>
+                <a href="/#about" class="hover:text-[#14b8a6] transition-colors">关于</a>
+            </div>
+            <div class="flex items-center gap-x-3">
+                <button onclick="alert('联系邮箱：miniqweqwe@qq.com')"
+                        class="px-4 py-2 text-sm flex items-center gap-x-2 hover:bg-slate-800 rounded-2xl transition-all border border-slate-700">
+                    <i class="fa-solid fa-envelope"></i><span class="hidden sm:inline">联系我</span>
+                </button>
+                <button onclick="window.location.href='https://github.com/daimon3332'"
+                        class="px-4 py-2 text-sm flex items-center gap-x-2 hover:bg-slate-800 rounded-2xl transition-all border border-slate-700">
+                    <i class="fa-brands fa-github"></i><span class="hidden sm:inline">GitHub</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="pt-16"></div>
+    <main>
+        <section class="max-w-5xl mx-auto px-6 pt-16 pb-12">
+            <div class="flex flex-col items-center text-center">
+                <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-3xl bg-slate-800 border border-slate-700 mb-6">
+                    <div class="w-2 h-2 bg-[#14b8a6] rounded-full animate-pulse"></div>
+                    <span class="text-sm text-slate-400">个人知识库 · 持续更新中</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-semibold tracking-tighter mb-4">Daimona 个人笔记</h1>
+                <p class="max-w-xl text-lg md:text-xl text-slate-400 leading-relaxed">
+                    这里是我的个人笔记与文章分享站点，记录编程学习、课程复习、工具折腾和一点日常情绪。
+                </p>
+                <div class="mt-8 flex flex-wrap justify-center items-center gap-4">
+                    <button onclick="document.getElementById('notes').scrollIntoView({ behavior: 'smooth' })"
+                            class="px-8 py-3.5 bg-[#14b8a6] hover:bg-[#0f766e] transition-all text-white font-medium rounded-3xl flex items-center gap-x-3 shadow-lg shadow-[#14b8a6]/30">
+                        <span>浏览笔记</span><i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="notes" class="max-w-5xl mx-auto px-6 pb-14">
+            <div class="flex justify-end mb-8">
+                <span class="text-sm text-slate-500">19 篇</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-05-19.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-05-19</div>
+                    <i class="fa-solid fa-wand-magic-sparkles text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">给个人笔记站点换了个样式</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把旧首页改成深色卡片风格，笔记按日期归档，终于像一个能看的个人站了。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>站点</span><span class="mx-2">·</span><span>阅读 6 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-05-14.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-05-14</div>
+                    <i class="fa-solid fa-calendar-check text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">期末前的时间表</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把接下来几周的复习和实验截止日期排了一下，避免全部撞车。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>考试</span><span class="mx-2">·</span><span>阅读 5 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-05-06.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-05-06</div>
+                    <i class="fa-solid fa-gear text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">systemd 服务文件入门</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">写了一个简单的 systemd service，让脚本开机自动启动。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Linux</span><span class="mx-2">·</span><span>阅读 8 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-04-26.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-04-26</div>
+                    <i class="fa-solid fa-seedling text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">一次简历修改后的感受</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把“会什么”改成“做过什么”，简历看起来终于不像技能列表了。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>日常</span><span class="mx-2">·</span><span>阅读 5 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-04-17.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-04-17</div>
+                    <i class="fa-solid fa-database text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">数据库课实验：索引不是玄学</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">通过 EXPLAIN 看执行计划，第一次直观看到索引到底有没有用上。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>数据库</span><span class="mx-2">·</span><span>阅读 7 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-04-08.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-04-08</div>
+                    <i class="fa-solid fa-snowflake text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">NixOS 配置模块化</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把一个很长的 configuration.nix 拆成多个模块，读起来舒服很多。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>NixOS</span><span class="mx-2">·</span><span>阅读 8 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-03-30.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-03-30</div>
+                    <i class="fa-solid fa-moon text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">宿舍网络和深夜 debug</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">网络一卡，bug 一堆，最后发现是代理和 DNS 配置一起乱了。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>日常</span><span class="mx-2">·</span><span>阅读 4 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-03-19.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-03-19</div>
+                    <i class="fa-brands fa-git-alt text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">一次 Git 冲突解决记录</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">小组作业合并时遇到冲突，顺手记录冲突标记和解决步骤。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>工具</span><span class="mx-2">·</span><span>阅读 5 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-03-05.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-03-05</div>
+                    <i class="fa-brands fa-java text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">Java 异常处理别乱 catch</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">今天写实验时发现 catch Exception 虽然省事，但会把真正的问题藏起来。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Java</span><span class="mx-2">·</span><span>阅读 6 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-02-23.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-02-23</div>
+                    <i class="fa-brands fa-docker text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">Docker Compose 写实验环境</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">用 Compose 把 Web、数据库和缓存服务写到一个文件里，重启环境舒服很多。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Docker</span><span class="mx-2">·</span><span>阅读 9 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-02-10.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-02-10</div>
+                    <i class="fa-solid fa-book text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">关于学习方法的思考</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">记录最近学系统编程时的一些心得，以及如何保持长期专注。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>学习</span><span class="mx-2">·</span><span>阅读 7 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-01-28.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-01-28</div>
+                    <i class="fa-solid fa-lightbulb text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">终端效率工具链分享</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">Yazi、Zellij、Starship 等现代终端工具组合使用，让命令行工作流更顺滑。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>工具</span><span class="mx-2">·</span><span>阅读 8 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-01-16.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-01-16</div>
+                    <i class="fa-solid fa-pen-nib text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">考试周的复盘</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">这次考试周最大的教训：不要把所有课都留到最后三天。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>考试</span><span class="mx-2">·</span><span>阅读 6 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2026-01-04.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2026-01-04</div>
+                    <i class="fa-solid fa-snowflake text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">NixOS 安装踩坑记录</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">第一次认真装 NixOS，记录分区、硬件配置生成和 rebuild 的几个坑。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>NixOS</span><span class="mx-2">·</span><span>阅读 10 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2025-12-20.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2025-12-20</div>
+                    <i class="fa-solid fa-folder-tree text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">Linux 文件系统路径整理</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把 /etc、/var、/usr、/home、/tmp 这些路径按用途重新梳理了一遍。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Linux</span><span class="mx-2">·</span><span>阅读 8 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2025-12-06.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2025-12-06</div>
+                    <i class="fa-solid fa-terminal text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">ls 命令的小细节</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">整理 `ls -la`、`ls -lh`、隐藏文件和排序参数，都是平时用得上的小东西。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Linux</span><span class="mx-2">·</span><span>阅读 5 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2025-11-27.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2025-11-27</div>
+                    <i class="fa-solid fa-mug-hot text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">有点 emo，但还是把实验交了</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">晚上状态一般，不过一点点拆任务，最后还是把 Linux 实验报告补完了。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>日常</span><span class="mx-2">·</span><span>阅读 4 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2025-11-18.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2025-11-18</div>
+                    <i class="fa-brands fa-java text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">Java 期中复习：泛型和集合</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">期中前把 List、Map、泛型边界和常见坑整理了一下，感觉终于不那么虚了。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Java</span><span class="mx-2">·</span><span>阅读 7 分钟</span>
+                </div>
+            </a>
+            <a class="section-card bg-slate-800 border border-slate-700/80 rounded-3xl p-7 block" href="notes/2025-11-03.html">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="px-3 py-1 text-xs font-medium bg-slate-700 text-[#14b8a6] rounded-2xl w-fit">2025-11-03</div>
+                    <i class="fa-brands fa-docker text-slate-500"></i>
+                </div>
+                <h3 class="font-semibold text-2xl tracking-tight mb-3">Docker 网络模式又看了一遍</h3>
+                <p class="text-slate-400 leading-relaxed line-clamp-3">把 bridge、host、none 和自定义网络重新过了一遍，顺手记下几个容易混的点。</p>
+                <div class="mt-6 flex items-center text-sm text-slate-500">
+                    <span>Docker</span><span class="mx-2">·</span><span>阅读 6 分钟</span>
+                </div>
+            </a>
+            </div>
+        </section>
+
+        <section id="archive" class="max-w-5xl mx-auto px-6 pb-14">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2026 年 5 月</h3>
+                    <a href="notes/2026-05-19.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>给个人笔记站点换了个样式</span><span class="text-sm text-slate-500 font-mono">2026-05-19</span>
+                    </a>
+                    <a href="notes/2026-05-14.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>期末前的时间表</span><span class="text-sm text-slate-500 font-mono">2026-05-14</span>
+                    </a>
+                    <a href="notes/2026-05-06.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>systemd 服务文件入门</span><span class="text-sm text-slate-500 font-mono">2026-05-06</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2026 年 4 月</h3>
+                    <a href="notes/2026-04-26.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>一次简历修改后的感受</span><span class="text-sm text-slate-500 font-mono">2026-04-26</span>
+                    </a>
+                    <a href="notes/2026-04-17.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>数据库课实验：索引不是玄学</span><span class="text-sm text-slate-500 font-mono">2026-04-17</span>
+                    </a>
+                    <a href="notes/2026-04-08.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>NixOS 配置模块化</span><span class="text-sm text-slate-500 font-mono">2026-04-08</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2026 年 3 月</h3>
+                    <a href="notes/2026-03-30.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>宿舍网络和深夜 debug</span><span class="text-sm text-slate-500 font-mono">2026-03-30</span>
+                    </a>
+                    <a href="notes/2026-03-19.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>一次 Git 冲突解决记录</span><span class="text-sm text-slate-500 font-mono">2026-03-19</span>
+                    </a>
+                    <a href="notes/2026-03-05.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>Java 异常处理别乱 catch</span><span class="text-sm text-slate-500 font-mono">2026-03-05</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2026 年 2 月</h3>
+                    <a href="notes/2026-02-23.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>Docker Compose 写实验环境</span><span class="text-sm text-slate-500 font-mono">2026-02-23</span>
+                    </a>
+                    <a href="notes/2026-02-10.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>关于学习方法的思考</span><span class="text-sm text-slate-500 font-mono">2026-02-10</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2026 年 1 月</h3>
+                    <a href="notes/2026-01-28.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>终端效率工具链分享</span><span class="text-sm text-slate-500 font-mono">2026-01-28</span>
+                    </a>
+                    <a href="notes/2026-01-16.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>考试周的复盘</span><span class="text-sm text-slate-500 font-mono">2026-01-16</span>
+                    </a>
+                    <a href="notes/2026-01-04.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>NixOS 安装踩坑记录</span><span class="text-sm text-slate-500 font-mono">2026-01-04</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2025 年 12 月</h3>
+                    <a href="notes/2025-12-20.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>Linux 文件系统路径整理</span><span class="text-sm text-slate-500 font-mono">2025-12-20</span>
+                    </a>
+                    <a href="notes/2025-12-06.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>ls 命令的小细节</span><span class="text-sm text-slate-500 font-mono">2025-12-06</span>
+                    </a>
+            </section>
+            <section class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-6">
+                <h3 class="text-xl font-semibold mb-3">2025 年 11 月</h3>
+                    <a href="notes/2025-11-27.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>有点 emo，但还是把实验交了</span><span class="text-sm text-slate-500 font-mono">2025-11-27</span>
+                    </a>
+                    <a href="notes/2025-11-18.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>Java 期中复习：泛型和集合</span><span class="text-sm text-slate-500 font-mono">2025-11-18</span>
+                    </a>
+                    <a href="notes/2025-11-03.html" class="flex items-center justify-between gap-4 py-3 border-b border-slate-700/50 last:border-0 hover:text-[#14b8a6] transition-colors">
+                        <span>Docker 网络模式又看了一遍</span><span class="text-sm text-slate-500 font-mono">2025-11-03</span>
+                    </a>
+            </section>
+            </div>
+        </section>
+
+        <section id="about" class="max-w-5xl mx-auto px-6 pb-8">
+            <div class="bg-slate-800/70 border border-slate-700/80 rounded-3xl p-7 text-center">
+                <h2 class="text-3xl font-semibold tracking-tight mb-4">关于这个站点</h2>
+                <p class="max-w-2xl mx-auto text-slate-400 leading-relaxed">
+                    这是一个朴素的个人静态笔记站，主要用来整理大学期间的学习记录：Linux、Docker、Java、NixOS、数据库、考试经验，以及一些日常碎碎念。
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 mt-12">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <a href="https://beian.miit.gov.cn/" target="_blank" style="color: #ffffff; text-decoration: none;">
                 冀ICP备20260167号
             </a>
-        </p>
+        </div>
     </footer>
+    <script>
+        window.onload = function() {
+            const cards = document.querySelectorAll('.section-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    card.style.transitionDelay = (index * 35) + 'ms';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 120);
+            });
+        };
+    </script>
 </body>
 </html>
+
+
